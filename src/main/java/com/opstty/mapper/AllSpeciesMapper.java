@@ -12,10 +12,13 @@ public class AllSpeciesMapper extends Mapper<Object, Text, Text, IntWritable> {
 
     public void map(Object key, Text value, Context context)
             throws IOException, InterruptedException {
+
         String str = value.toString();
-        for(int s = 0; s < str.split(";").length; s++){
-            if(s == 3 && !str.split(";")[0].contains("GEOPOINT")) {
-                context.write(new Text(str.split(";")[s]), one);
+        String[] split = str.split(";");
+
+        for(int index = 0; index < split.length; index++) {
+            if(index == 3 && !split[0].contains("GEOPOINT")) {
+                context.write(new Text(split[index]), one);
             }
 
         }

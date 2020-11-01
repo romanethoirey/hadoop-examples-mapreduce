@@ -39,7 +39,7 @@ public class AllSpeciesMapperTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        verify(this.context, times(1))
-                .write(new Text("pomifera"), new IntWritable(1));
+        verify(this.context, times(8))
+                .write(new Text("sylvatica"), new IntWritable(1));
     }
 }
