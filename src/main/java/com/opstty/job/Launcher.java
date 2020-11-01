@@ -1,14 +1,11 @@
 package com.opstty.job;
 
-import com.opstty.mapper.AllSpeciesMapper;
-import com.opstty.mapper.DistrictCountMapper;
-import com.opstty.mapper.TokenizerMapper;
-import com.opstty.reducer.AllSpeciesReducer;
-import com.opstty.reducer.DistrictCountReducer;
-import com.opstty.reducer.IntSumReducer;
+import com.opstty.mapper.*;
+import com.opstty.reducer.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -45,7 +42,7 @@ public class Launcher {
 
             case "district_containing_trees":
                 if (otherArgs.length < 2) {
-                    System.err.println("Usage: wordcount <in> [<in>...] <out>");
+                    System.err.println("Usage: district_containing_trees <in> <out>");
                     System.exit(2);
                 }
 
@@ -66,7 +63,7 @@ public class Launcher {
 
             case "all_species":
                 if (otherArgs.length < 2) {
-                    System.err.println("Usage: all_species <in> [<in>...] <out>");
+                    System.err.println("Usage: all_species <in> <out>");
                     System.exit(2);
                 }
 
@@ -85,6 +82,47 @@ public class Launcher {
                 System.exit(all_species.waitForCompletion(true) ? 0 : 1);
                 break;
 
+            case "species_count":
+                if (otherArgs.length < 2) {
+                    System.err.println("Usage: species_count <in> <out>");
+                    System.exit(2);
+                }
+
+                Job species_count = Job.getInstance(conf, "species_count");
+                species_count.setJarByClass(Launcher.class);
+                species_count.setMapperClass(SpeciesCountMapper.class);
+                species_count.setCombinerClass(SpeciesCountReducer.class);
+                species_count.setReducerClass(SpeciesCountReducer.class);
+                species_count.setOutputKeyClass(Text.class);
+                species_count.setOutputValueClass(IntWritable.class);
+
+
+                FileInputFormat.addInputPath(species_count, new Path(otherArgs[1]));
+                FileOutputFormat.setOutputPath(species_count, new Path(otherArgs[2]));
+
+                System.exit(species_count.waitForCompletion(true) ? 0 : 1);
+                break;
+
+            case "height_species":
+                if (otherArgs.length < 2) {
+                    System.err.println("Usage: height_species <in> <out>");
+                    System.exit(2);
+                }
+
+                Job height_species = Job.getInstance(conf, "height_species");
+                height_species.setJarByClass(Launcher.class);
+                height_species.setMapperClass(HeightBySpeciesMapper.class);
+                height_species.setCombinerClass(HeightBySpeciesReducer.class);
+                height_species.setReducerClass(HeightBySpeciesReducer.class);
+                height_species.setOutputKeyClass(Text.class);
+                height_species.setOutputValueClass(Text.class);
+
+
+                FileInputFormat.addInputPath(height_species, new Path(otherArgs[1]));
+                FileOutputFormat.setOutputPath(height_species, new Path(otherArgs[2]));
+
+                System.exit(height_species.waitForCompletion(true) ? 0 : 1);
+                break;
         }
     }
 }

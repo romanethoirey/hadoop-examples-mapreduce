@@ -1,7 +1,6 @@
 package com.opstty.mapper;
 
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.junit.Before;
@@ -18,15 +17,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AllSpeciesMapperTest {
-
+public class HeightBySpeciesMapperTest {
     @Mock
     private Mapper.Context context;
-    private AllSpeciesMapper allSpeciesMapper;
+    private HeightBySpeciesMapper heightBySpeciesMapper;
     String csvFile = "src/test/resources/data/trees.csv";
 
     @Before
-    public void setup() { this.allSpeciesMapper = new AllSpeciesMapper(); }
+    public void setup() { this.heightBySpeciesMapper = new HeightBySpeciesMapper(); }
 
     @Test
     public void testMap() throws IOException, InterruptedException {
@@ -35,12 +33,12 @@ public class AllSpeciesMapperTest {
         try {
             br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
-                this.allSpeciesMapper.map(null, new Text(line), this.context);
+                heightBySpeciesMapper.map(null, new Text(line), this.context);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        verify(this.context, times(8))
-                .write(new Text("sylvatica"), new IntWritable(1));
+        verify(this.context, times(1))
+                .write(new Text("Platanus"), new Text("45.0"));
     }
 }
