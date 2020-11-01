@@ -12,12 +12,13 @@ public class DistrictCountMapper extends Mapper<Object, Text, Text, IntWritable>
 
     public void map(Object key, Text value, Context context)
             throws IOException, InterruptedException {
-        String str = value.toString();
-        for(int s = 0; s < str.split(";").length; s++){
-            if(s == 1 && !str.split(";")[0].contains("GEOPOINT")) {
-                context.write(new Text(str.split(";")[s]), one);
-            }
 
+        String str = value.toString();
+
+        for(int index = 0; index < str.split(";").length; index++){
+            if(index == 1 && !str.split(";")[0].contains("GEOPOINT")) {
+                context.write(new Text(str.split(";")[index]), one);
+            }
         }
     }
 }
