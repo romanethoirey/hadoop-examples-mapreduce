@@ -9,7 +9,7 @@ public class HeightBySpeciesReducer extends Reducer<Text, Text, Text, Text> {
 
     public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
-        float max = -1;
+        float max = Integer.MIN_VALUE;
         for (Text val : values) {
             if (val.toString() != "") {
                 float flt = Float.parseFloat(val.toString());

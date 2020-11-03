@@ -142,6 +142,27 @@ public class Launcher {
 
                 System.exit(sorted_height.waitForCompletion(true) ? 0 : 1);
                 break;
+
+            case "oldest_tree":
+                if (otherArgs.length < 2) {
+                    System.err.println("Usage: oldest_tree <in> <out>");
+                    System.exit(2);
+                }
+
+                Job oldest_tree = Job.getInstance(conf, "oldest_tree");
+                oldest_tree.setJarByClass(Launcher.class);
+                oldest_tree.setMapperClass(OldestTreeMapper.class);
+                oldest_tree.setCombinerClass(OldestTreeReducer.class);
+                oldest_tree.setReducerClass(OldestTreeReducer.class);
+                oldest_tree.setOutputKeyClass(Text.class);
+                oldest_tree.setOutputValueClass(IntWritable.class);
+
+
+                FileInputFormat.addInputPath(oldest_tree, new Path(otherArgs[1]));
+                FileOutputFormat.setOutputPath(oldest_tree, new Path(otherArgs[2]));
+
+                System.exit(oldest_tree.waitForCompletion(true) ? 0 : 1);
+                break;
         }
     }
 }
