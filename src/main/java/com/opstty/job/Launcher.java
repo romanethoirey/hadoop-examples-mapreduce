@@ -4,9 +4,7 @@ import com.opstty.mapper.*;
 import com.opstty.reducer.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -122,6 +120,27 @@ public class Launcher {
                 FileOutputFormat.setOutputPath(height_species, new Path(otherArgs[2]));
 
                 System.exit(height_species.waitForCompletion(true) ? 0 : 1);
+                break;
+
+            case "sorted_height":
+                if (otherArgs.length < 2) {
+                    System.err.println("Usage: sorted_height <in> <out>");
+                    System.exit(2);
+                }
+
+                Job sorted_height = Job.getInstance(conf, "sorted_height");
+                sorted_height.setJarByClass(Launcher.class);
+                sorted_height.setMapperClass(SortedHeightMapper.class);
+                sorted_height.setCombinerClass(SortedHeightReducer.class);
+                sorted_height.setReducerClass(SortedHeightReducer.class);
+                sorted_height.setOutputKeyClass(DoubleWritable.class);
+                sorted_height.setOutputValueClass(Text.class);
+
+
+                FileInputFormat.addInputPath(sorted_height, new Path(otherArgs[1]));
+                FileOutputFormat.setOutputPath(sorted_height, new Path(otherArgs[2]));
+
+                System.exit(sorted_height.waitForCompletion(true) ? 0 : 1);
                 break;
         }
     }
