@@ -71,7 +71,7 @@ public class Launcher {
                 all_species.setCombinerClass(AllSpeciesReducer.class);
                 all_species.setReducerClass(AllSpeciesReducer.class);
                 all_species.setOutputKeyClass(Text.class);
-                all_species.setOutputValueClass(IntWritable.class);
+                all_species.setOutputValueClass(NullWritable.class);
 
 
                 FileInputFormat.addInputPath(all_species, new Path(otherArgs[1]));

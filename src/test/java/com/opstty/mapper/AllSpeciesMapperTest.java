@@ -41,6 +41,6 @@ public class AllSpeciesMapperTest {
             e.printStackTrace();
         }
         verify(this.context, times(8))
-                .write(new Text("sylvatica"), new IntWritable(1));
+                .write(new Text("sylvatica"), NullWritable.get());
     }
 }
