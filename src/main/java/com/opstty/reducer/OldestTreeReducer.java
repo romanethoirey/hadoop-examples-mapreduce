@@ -7,15 +7,15 @@ import org.apache.hadoop.mapreduce.Reducer;
 import java.io.IOException;
 
 public class OldestTreeReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-    private int oldest_year = Integer.MAX_VALUE;
+    private int tree_age = Integer.MIN_VALUE;
     private Text district = new Text();
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context)
             throws IOException, InterruptedException {
 
         for(IntWritable value: values){
-            if(value.get() < oldest_year){
-                oldest_year = value.get();
+            if(value.get() > tree_age){
+                tree_age = value.get();
                 district.set(key);
             }
         }
@@ -23,6 +23,6 @@ public class OldestTreeReducer extends Reducer<Text, IntWritable, Text, IntWrita
 
     @Override
     public void cleanup(Context context) throws IOException, InterruptedException {
-        context.write(district, new IntWritable(oldest_year));
+        context.write(district, new IntWritable(tree_age));
     }
 }
