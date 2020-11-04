@@ -163,6 +163,27 @@ public class Launcher {
 
                 System.exit(oldest_tree.waitForCompletion(true) ? 0 : 1);
                 break;
+
+            case "district_containing_most_trees":
+                if (otherArgs.length < 2) {
+                    System.err.println("Usage: district_containing_most_trees <in> <out>");
+                    System.exit(2);
+                }
+
+                Job district_containing_most_trees = Job.getInstance(conf, "district_containing_most_trees");
+                district_containing_most_trees.setJarByClass(Launcher.class);
+                district_containing_most_trees.setMapperClass(DistrictMostTreeMapper.class);
+                district_containing_most_trees.setCombinerClass(DistrictMostTreeReducer.class);
+                district_containing_most_trees.setReducerClass(DistrictMostTreeReducer.class);
+                district_containing_most_trees.setOutputKeyClass(Text.class);
+                district_containing_most_trees.setOutputValueClass(IntWritable.class);
+
+
+                FileInputFormat.addInputPath(district_containing_most_trees, new Path(otherArgs[1]));
+                FileOutputFormat.setOutputPath(district_containing_most_trees, new Path(otherArgs[2]));
+
+                System.exit(district_containing_most_trees.waitForCompletion(true) ? 0 : 1);
+                break;
         }
     }
 }
